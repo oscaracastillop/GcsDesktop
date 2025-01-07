@@ -1,0 +1,209 @@
+CREATE database DBGcs
+
+GO
+
+USE DBGcs
+
+GO
+
+create table Medida(
+IdMedida int primary key identity(1,1),
+Nombre varchar(50) not null,
+Abreviatura varchar(4) not null, -- und kg
+Equivalente varchar(4) not null, -- ung g
+Valor int not null -- 1, 1000
+)
+
+GO
+
+create table Categoria(
+IdCategoria int primary key identity(1,1),
+Nombre varchar(50) not null,
+IdMedida int references Medida(IdMedida),
+Activo bit default 1
+)
+
+GO
+
+create table Producto(
+IdProducto int primary key identity(1,1),
+IdCategoria int references Categoria(IdCategoria),
+Codigo varchar(50) not null,
+Descripcion varchar(150) not null,
+PrecioCompra decimal(10,2) not null,
+PrecioVenta decimal(10,2) not null,
+Cantidad int not null,
+Activo bit default 1
+)
+
+GO
+
+create table Rol(
+IdRol int primary key identity(1,1),
+Nombre varchar(50) not null,
+)
+
+GO
+
+create table Usuario(
+IdUsuario int primary key identity(1,1),
+IdRol int references Rol(IdRol),
+NombreCompleto varchar(255) not null,
+Correo varchar(255) not null,
+NombreUsuario varchar(255) not null unique,
+Clave varchar(100) not null,
+ResetearClave bit default 1,
+Activo bit default 1
+)
+
+GO
+
+create table CorrelativoVenta(
+Serie varchar(3) not null, --001
+Numero int not null, --1,2,3
+Activo bit default 1,
+primary key(Serie, Numero)
+)
+
+GO
+
+create table Venta(
+IdVenta int primary key identity(1,1),
+NumeroVenta varchar(10), --001-00005
+IdUsuarioRegistro int references Usuario(IdUsuario),
+NombreCliente varchar(255),
+PrecioTotal decimal(10,2) not null,
+PagoCon decimal(10,2),
+Cambio decimal(10,2),
+FechaRegistro datetime default getdate(),
+Activo bit default 1
+)
+
+GO
+
+create table DetalleVenta(
+IdDetalleVenta int primary key identity(1,1),
+IdVenta int references Venta(IdVenta),
+IdProducto int references Producto(IdProducto),
+Cantidad int,
+PrecioVenta decimal(10,2),
+PrecioTotal decimal(10,2)
+)
+
+GO
+
+create table Negocio(
+IdNegocio int primary key identity(1,1),
+RazonSocial varchar(100),
+RUC varchar(20),
+Direccion varchar(100),
+Celular varchar(10),
+Correo varchar(50),
+SimboloMoneda varchar(5),
+NombreLogo varchar(100),
+UrlLogo varchar(255)
+)
+
+GO
+
+create table Menu(
+IdMenu int primary key identity(1,1),
+NombreMenu varchar(50) not null,
+IdMenuPadre int default 0 not null
+)
+
+GO
+
+create table MenuRol(
+IdMenuRol int primary key identity(1,1),
+IdMenu int references Menu(IdMenu),
+IdRol int references Rol(IdRol),
+Activo bit default 1
+)
+
+GO
+
+insert into Medida (Nombre, Abreviatura, Equivalente, Valor) 
+values 
+('Unidad','Und','Und',1),
+('Kilogramo','kg','g',1000)
+
+GO
+
+create procedure sp_listaMedida
+as
+begin
+	select IdMedida, Nombre, Abreviatura, Equivalente, Valor from Medida
+end
+
+-- execute sp_listaMedida
+
+GO
+
+create procedure sp_listaCategoria
+(@Buscar varchar(50) = ''
+)
+as
+begin
+	select 
+	c.IdCategoria,
+	c.Nombre,
+	m.IdMedida,
+	m.Nombre[NombreMedida],
+	c.Activo
+	from
+	Categoria c
+	inner join Medida m on m.IdMedida = c.IdMedida
+	where concat (c.Nombre, m.Nombre, iif(c.activo = 1, 'SI', 'NO'))
+	like '%' + @Buscar + '%' 
+end
+
+GO
+
+create procedure sp_crearCategoria(
+@Nombre varchar(50),
+@IdMedida int,
+@MsjError varchar(100) output
+)
+as
+begin
+	set @MsjError = ''
+
+	if(exists(select * from Categoria where Nombre = @Nombre))
+	begin
+		set @MsjError = 'El nombre de Categoría ya existe'
+		return
+	end
+	
+	insert into Categoria (Nombre, IdCategoria) values (@Nombre, @IdMedida)
+end
+
+GO
+
+create procedure sp_editarCategoria(
+@IdCategoria int,
+@Nombre varchar(50),
+@IdMedida int,
+@Activo int,
+@MsjError varchar(100) output
+)
+as
+begin
+	set @MsjError = ''
+
+	if(exists(select * from Categoria where Nombre = @Nombre and IdCategoria != @IdCategoria))
+	begin
+		set @MsjError = 'El nombre de Categoría ya existe'
+		return
+	end
+	
+	update Categoria set
+	Nombre = @Nombre,
+	IdMedida = @IdMedida,
+	Activo = @Activo
+	where IdCategoria = @IdCategoria
+end
+
+GO
+
+insert into Categoria (Nombre, IdMedida) Values ('Accesorios',1)
