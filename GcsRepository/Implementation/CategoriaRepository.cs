@@ -56,7 +56,7 @@ namespace GcsRepository.Implementation
                 var cmd = new SqlCommand("sp_crearCategoria", con);
                 cmd.Parameters.AddWithValue("@Nombre", objeto.Nombre);
                 cmd.Parameters.AddWithValue("@IdMedida", objeto.RefMedida.IdMedida);
-                cmd.Parameters.Add("@MsjError", SqlDbType.VarChar,100).Direction = ParameterDirection.Input;
+                cmd.Parameters.Add("@MsjError",SqlDbType.VarChar,100).Direction = ParameterDirection.Output;
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 try

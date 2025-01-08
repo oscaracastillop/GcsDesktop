@@ -33,13 +33,13 @@
             dataGridViewCategorias = new DataGridView();
             btnBuscar = new Button();
             textBoxBuscar = new TextBox();
-            btnNuevo = new Button();
+            btnNuevoLista = new Button();
             tabNuevo = new TabPage();
             btnGuardarNuevo = new Button();
             btnVolverNuevo = new Button();
             comboBoxMedidaNuevo = new ComboBox();
             label3 = new Label();
-            textBox1 = new TextBox();
+            textBoxNombreNuevo = new TextBox();
             label2 = new Label();
             tabEditar = new TabPage();
             comboBoxHabilitado = new ComboBox();
@@ -76,7 +76,7 @@
             tabLista.Controls.Add(dataGridViewCategorias);
             tabLista.Controls.Add(btnBuscar);
             tabLista.Controls.Add(textBoxBuscar);
-            tabLista.Controls.Add(btnNuevo);
+            tabLista.Controls.Add(btnNuevoLista);
             tabLista.Location = new Point(4, 24);
             tabLista.Name = "tabLista";
             tabLista.Padding = new Padding(3);
@@ -103,6 +103,7 @@
             btnBuscar.TabIndex = 2;
             btnBuscar.Text = "Buscar";
             btnBuscar.UseVisualStyleBackColor = true;
+            btnBuscar.Click += btnBuscar_Click;
             // 
             // textBoxBuscar
             // 
@@ -111,16 +112,17 @@
             textBoxBuscar.Size = new Size(201, 23);
             textBoxBuscar.TabIndex = 1;
             // 
-            // btnNuevo
+            // btnNuevoLista
             // 
-            btnNuevo.Cursor = Cursors.Hand;
-            btnNuevo.FlatStyle = FlatStyle.Flat;
-            btnNuevo.Location = new Point(22, 18);
-            btnNuevo.Name = "btnNuevo";
-            btnNuevo.Size = new Size(75, 23);
-            btnNuevo.TabIndex = 0;
-            btnNuevo.Text = "Nuevo";
-            btnNuevo.UseVisualStyleBackColor = true;
+            btnNuevoLista.Cursor = Cursors.Hand;
+            btnNuevoLista.FlatStyle = FlatStyle.Flat;
+            btnNuevoLista.Location = new Point(22, 18);
+            btnNuevoLista.Name = "btnNuevoLista";
+            btnNuevoLista.Size = new Size(75, 23);
+            btnNuevoLista.TabIndex = 0;
+            btnNuevoLista.Text = "Nuevo";
+            btnNuevoLista.UseVisualStyleBackColor = true;
+            btnNuevoLista.Click += btnNuevoLista_Click;
             // 
             // tabNuevo
             // 
@@ -128,7 +130,7 @@
             tabNuevo.Controls.Add(btnVolverNuevo);
             tabNuevo.Controls.Add(comboBoxMedidaNuevo);
             tabNuevo.Controls.Add(label3);
-            tabNuevo.Controls.Add(textBox1);
+            tabNuevo.Controls.Add(textBoxNombreNuevo);
             tabNuevo.Controls.Add(label2);
             tabNuevo.Location = new Point(4, 24);
             tabNuevo.Name = "tabNuevo";
@@ -149,6 +151,7 @@
             btnGuardarNuevo.TabIndex = 5;
             btnGuardarNuevo.Text = "Guardar";
             btnGuardarNuevo.UseVisualStyleBackColor = true;
+            btnGuardarNuevo.Click += btnGuardarNuevo_Click;
             // 
             // btnVolverNuevo
             // 
@@ -160,6 +163,7 @@
             btnVolverNuevo.TabIndex = 4;
             btnVolverNuevo.Text = "Volver";
             btnVolverNuevo.UseVisualStyleBackColor = true;
+            btnVolverNuevo.Click += btnVolverNuevo_Click;
             // 
             // comboBoxMedidaNuevo
             // 
@@ -180,12 +184,12 @@
             label3.TabIndex = 2;
             label3.Text = "Medida:";
             // 
-            // textBox1
+            // textBoxNombreNuevo
             // 
-            textBox1.Location = new Point(35, 45);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(327, 23);
-            textBox1.TabIndex = 1;
+            textBoxNombreNuevo.Location = new Point(35, 45);
+            textBoxNombreNuevo.Name = "textBoxNombreNuevo";
+            textBoxNombreNuevo.Size = new Size(327, 23);
+            textBoxNombreNuevo.TabIndex = 1;
             // 
             // label2
             // 
@@ -255,6 +259,7 @@
             btnVolverEditar.TabIndex = 10;
             btnVolverEditar.Text = "Volver";
             btnVolverEditar.UseVisualStyleBackColor = true;
+            btnVolverEditar.Click += btnVolverEditar_Click;
             // 
             // comboBoxMedidaEditar
             // 
@@ -331,12 +336,12 @@
         private TabPage tabNuevo;
         private Label label1;
         private TextBox textBoxBuscar;
-        private Button btnNuevo;
+        private Button btnNuevoLista;
         private TabPage tabEditar;
         private Button btnBuscar;
         private DataGridView dataGridViewCategorias;
         private Label label3;
-        private TextBox textBox1;
+        private TextBox textBoxNombreNuevo;
         private Label label2;
         private Button btnGuardarNuevo;
         private Button btnVolverNuevo;

@@ -175,7 +175,7 @@ begin
 		return
 	end
 	
-	insert into Categoria (Nombre, IdCategoria) values (@Nombre, @IdMedida)
+	insert into Categoria (Nombre, IdMedida) values (@Nombre, @IdMedida)
 end
 
 GO
