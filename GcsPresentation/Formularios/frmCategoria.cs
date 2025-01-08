@@ -129,18 +129,29 @@ namespace GcsPresentation.Formularios
             var objeto = new Categoria
             {
                 Nombre = textBoxNombreNuevo.Text.Trim(),
-                RefMedida = new Medida {IdMedida = item.Valor }
+                RefMedida = new Medida { IdMedida = item.Valor }
             };
 
             var respuesta = await _categoriaService.Crear(objeto);
 
-            if (respuesta != "") {
+            if (respuesta != "")
+            {
                 MessageBox.Show(respuesta);
             }
             else
             {
                 await MostrarCategorias();
                 MostrarTap(tabLista.Name);
+            }
+        }
+
+        private void dataGridViewCategorias_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridViewCategorias.Columns[e.ColumnIndex].Name == "ColumnaAccion")
+            {
+                var categoriaSeleccionada = (CategoriaVM)dataGridViewCategorias.CurrentRow.DataBoundItem;
+
+                textBoxNombreEditar.Text = categoriaSeleccionada.Nombre
             }
         }
     }

@@ -92,6 +92,7 @@
             dataGridViewCategorias.Name = "dataGridViewCategorias";
             dataGridViewCategorias.Size = new Size(685, 253);
             dataGridViewCategorias.TabIndex = 3;
+            dataGridViewCategorias.CellContentClick += dataGridViewCategorias_CellContentClick;
             // 
             // btnBuscar
             // 
