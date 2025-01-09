@@ -19,7 +19,7 @@ namespace GcsPresentation
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             var host = CreateHostBuilder().Build();
-            var formService = host.Services.GetRequiredService<frmCategoria>();
+            var formService = host.Services.GetRequiredService<frmProducto>();
             Application.Run(formService);
         }
 
@@ -33,6 +33,7 @@ namespace GcsPresentation
                 services.RegisterServiceDependencies();
 
                 services.AddTransient<frmCategoria>();
+                services.AddTransient<frmProducto>();
 
             });
     }
