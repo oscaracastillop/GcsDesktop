@@ -112,11 +112,6 @@ namespace GcsPresentation.Formularios
             MostrarTap(tabLista.Name);
         }
 
-        private void btnVolverEditar_Click(object sender, EventArgs e)
-        {
-            MostrarTap(tabLista.Name);
-        }
-
         private async void btnGuardarNuevo_Click(object sender, EventArgs e)
         {
             if (textBoxNombreNuevo.Text.Trim() == "")
@@ -151,8 +146,49 @@ namespace GcsPresentation.Formularios
             {
                 var categoriaSeleccionada = (CategoriaVM)dataGridViewCategorias.CurrentRow.DataBoundItem;
 
-                textBoxNombreEditar.Text = categoriaSeleccionada.Nombre
+                textBoxNombreEditar.Text = categoriaSeleccionada.Nombre.ToString();
+                comboBoxMedidaEditar.EstablecerValor(categoriaSeleccionada.IdMedida);
+                comboBoxHabilitado.EstablecerValor(categoriaSeleccionada.Activo);
+
+                MostrarTap(tabEditar.Name);
+                textBoxNombreEditar.Select();
             }
         }
+
+        private void btnVolverEditar_Click(object sender, EventArgs e)
+        {
+            MostrarTap(tabLista.Name);
+        }
+
+        private async void btnGuardarEditar_Click(object sender, EventArgs e)
+        {
+            if (textBoxNombreEditar.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe Ingresar el nombre");
+                return;
+            }
+
+            var categoriaSeleccionada = (CategoriaVM)dataGridViewCategorias.CurrentRow.DataBoundItem;
+            var objeto = new Categoria
+            {
+                IdCategoria = categoriaSeleccionada.IdCategoria,
+                Nombre = textBoxNombreEditar.Text.Trim(),
+                RefMedida = new Medida { IdMedida = ((OpcionCombo)comboBoxMedidaEditar.SelectedItem!).Valor },
+                Activo = ((OpcionCombo)comboBoxHabilitado.SelectedItem!).Valor
+            };
+
+            var respuesta = await _categoriaService.Editar(objeto);
+
+            if (respuesta != "")
+            {
+                MessageBox.Show(respuesta);
+            }
+            else
+            {
+                await MostrarCategorias();
+                MostrarTap(tabLista.Name);
+            }
+        }
+
     }
 }

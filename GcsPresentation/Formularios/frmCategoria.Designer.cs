@@ -249,6 +249,7 @@
             btnGuardarEditar.TabIndex = 11;
             btnGuardarEditar.Text = "Guardar";
             btnGuardarEditar.UseVisualStyleBackColor = true;
+            btnGuardarEditar.Click += btnGuardarEditar_Click;
             // 
             // btnVolverEditar
             // 

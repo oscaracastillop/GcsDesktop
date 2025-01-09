@@ -11,5 +11,16 @@ namespace GcsPresentation.Utilidades
             combo.ValueMember = "Valor";
             combo.SelectedIndex = 0;
         }
+
+        public static void EstablecerValor(this ComboBox combo, int valor)
+        {
+            foreach (OpcionCombo opcion in combo.Items)
+            {
+                if (opcion.Valor == valor)
+                {
+                    combo.SelectedItem = opcion;
+                }
+            }
+        }
     }
 }
