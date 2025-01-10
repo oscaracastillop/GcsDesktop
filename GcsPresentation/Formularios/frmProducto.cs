@@ -1,17 +1,9 @@
-﻿using GcsPresentation.Utilidades.Objetos;
-using GcsPresentation.Utilidades;
+﻿using GcsPresentation.Utilidades;
+using GcsPresentation.Utilidades.Objetos;
 using GcsPresentation.ViewModels;
-using GcsServices.Implementation;
+using GcsRepository.Entities;
 using GcsServices.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace GcsPresentation.Formularios
 {
@@ -73,6 +65,10 @@ namespace GcsPresentation.Formularios
             MostrarTap(tabLista.Name);
 
             dataGridViewProductos.ImplementarConfiguracion("Editar");
+            textBoxPrecioCompraNuevo.ValidarNumero();
+            textBoxPrecioCompraEditar.ValidarNumero();
+            textBoxPrecioVentaNuevo.ValidarNumero();
+            textBoxPrecioVentaEditar.ValidarNumero();
             //dataGridViewProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             await MostrarProductos();
 
@@ -100,6 +96,7 @@ namespace GcsPresentation.Formularios
 
         private void btnNuevoLista_Click(object sender, EventArgs e)
         {
+            MostrarTap(tabNuevo.Name);
             comboBoxCategoriaNuevo.SelectedIndex = 0;
             textBoxCodigoNuevo.Text = "";
             textBoxDescripcionNuevo.Text = "";
@@ -107,14 +104,86 @@ namespace GcsPresentation.Formularios
             textBoxPrecioVentaNuevo.Text = "";
             textBoxCantidadNuevo.Value = 0;
             comboBoxCategoriaNuevo.Select();
-            //tabControlMain.SelectedTab = tabControlMain.TabPages[tabNuevo.Name];
-
-            MostrarTap(tabNuevo.Name);
+            //tabControlMain.SelectedTab = tabControlMain.TabPages[tabNuevo.Name];            
         }
 
         private void btnVolverNuevo_Click(object sender, EventArgs e)
         {
             MostrarTap(tabLista.Name);
+        }
+
+        private async void btnGuardarNuevo_Click(object sender, EventArgs e)
+        {
+            if (textBoxCodigoNuevo.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar el código");
+                return;
+            }
+
+            if (textBoxDescripcionNuevo.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar la descripción");
+                return;
+            }
+
+            if (textBoxPrecioCompraNuevo.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar el Precio de Compra");
+                return;
+            }
+
+            if (textBoxPrecioVentaNuevo.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar el Precio de Venta");
+                return;
+            }
+
+            if (textBoxCantidadNuevo.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar la Cantidad");
+                return;
+            }
+
+            decimal preciocompra = 0;
+            decimal precioventa = 0;
+
+            if (!decimal.TryParse(textBoxPrecioCompraNuevo.Text, out preciocompra))
+            {
+                MessageBox.Show("Precio Compra - Formato moneda incorrecto", "Mensaje", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                textBoxPrecioCompraNuevo.Select();
+                return;
+            }
+
+            if (!decimal.TryParse(textBoxPrecioVentaNuevo.Text, out precioventa))
+            {
+                MessageBox.Show("Precio Venta - Formato moneda incorrecto", "Mensaje", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                textBoxPrecioVentaNuevo.Select();
+                return;
+            }
+
+            var objeto = new Producto
+            {
+                RefCategoria = new Categoria { IdCategoria = ((OpcionCombo)comboBoxCategoriaNuevo.SelectedItem!).Valor },
+                Codigo = textBoxCodigoNuevo.Text.Trim(),    
+                Descripcion = textBoxDescripcionNuevo.Text.Trim(),
+                PrecioCompra = preciocompra,
+                PrecioVenta = precioventa,
+                Cantidad = Convert.ToInt32(textBoxCantidadNuevo.Value)
+            };
+
+            var respuesta = await _productoService.Crear(objeto);
+
+            if (respuesta != "")
+            {
+                MessageBox.Show(respuesta);
+            }
+            else
+            {
+                await MostrarProductos();
+                MostrarTap(tabLista.Name);
+            }
         }
     }
 }

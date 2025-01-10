@@ -131,6 +131,7 @@
             btnGuardarNuevo.TabIndex = 5;
             btnGuardarNuevo.Text = "Guardar";
             btnGuardarNuevo.UseVisualStyleBackColor = false;
+            btnGuardarNuevo.Click += btnGuardarNuevo_Click;
             // 
             // btnVolverNuevo
             // 
