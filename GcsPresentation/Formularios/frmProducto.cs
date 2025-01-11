@@ -166,7 +166,7 @@ namespace GcsPresentation.Formularios
             var objeto = new Producto
             {
                 RefCategoria = new Categoria { IdCategoria = ((OpcionCombo)comboBoxCategoriaNuevo.SelectedItem!).Valor },
-                Codigo = textBoxCodigoNuevo.Text.Trim(),    
+                Codigo = textBoxCodigoNuevo.Text.Trim(),
                 Descripcion = textBoxDescripcionNuevo.Text.Trim(),
                 PrecioCompra = preciocompra,
                 PrecioVenta = precioventa,
@@ -174,6 +174,108 @@ namespace GcsPresentation.Formularios
             };
 
             var respuesta = await _productoService.Crear(objeto);
+
+            if (respuesta != "")
+            {
+                MessageBox.Show(respuesta);
+            }
+            else
+            {
+                await MostrarProductos();
+                MostrarTap(tabLista.Name);
+            }
+        }
+
+        private void dataGridViewProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridViewProductos.Columns[e.ColumnIndex].Name == "ColumnaAccion")
+            {
+                var productoSeleccionado = (ProductoVM)dataGridViewProductos.CurrentRow.DataBoundItem;
+
+                comboBoxCategoriaEditar.EstablecerValor(productoSeleccionado.IdCategoria);
+                textBoxCodigoEditar.Text = productoSeleccionado.Codigo;
+                textBoxDescripcionEditar.Text = productoSeleccionado.Descripcion;
+                textBoxPrecioCompraEditar.Text = productoSeleccionado.PrecioCompra;
+                textBoxPrecioVentaEditar.Text = productoSeleccionado.PrecioVenta;
+                textBoxCantidadEditar.Value = productoSeleccionado.Cantidad;
+                comboBoxHabilitado.EstablecerValor(productoSeleccionado.Activo);
+
+                MostrarTap(tabEditar.Name);
+                comboBoxCategoriaEditar.Select();
+            }
+        }
+
+        private void btnVolverEditar_Click(object sender, EventArgs e)
+        {
+            MostrarTap(tabLista.Name);
+        }
+
+        private async void btnGuardarEditar_Click(object sender, EventArgs e)
+        {
+            if (textBoxCodigoEditar.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar el código");
+                return;
+            }
+
+            if (textBoxDescripcionEditar.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar la descripción");
+                return;
+            }
+
+            if (textBoxPrecioCompraEditar.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar el Precio de Compra");
+                return;
+            }
+
+            if (textBoxPrecioVentaEditar.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar el Precio de Venta");
+                return;
+            }
+
+            if (textBoxCantidadEditar.Text.Trim() == "")
+            {
+                MessageBox.Show("Debe ingresar la Cantidad");
+                return;
+            }
+
+            decimal preciocompra = 0;
+            decimal precioventa = 0;
+
+            if (!decimal.TryParse(textBoxPrecioCompraEditar.Text, out preciocompra))
+            {
+                MessageBox.Show("Precio Compra - Formato moneda incorrecto", "Mensaje", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                textBoxPrecioCompraEditar.Select();
+                return;
+            }
+
+            if (!decimal.TryParse(textBoxPrecioVentaEditar.Text, out precioventa))
+            {
+                MessageBox.Show("Precio Venta - Formato moneda incorrecto", "Mensaje", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                textBoxPrecioVentaEditar.Select();
+                return;
+            }
+
+            var productoSeleccionado = (ProductoVM)dataGridViewProductos.CurrentRow.DataBoundItem;
+
+            var objeto = new Producto
+            {
+                IdProducto = productoSeleccionado.IdProducto,
+                RefCategoria = new Categoria { IdCategoria = ((OpcionCombo)comboBoxCategoriaEditar.SelectedItem!).Valor },
+                Codigo = textBoxCodigoEditar.Text.Trim(),
+                Descripcion = textBoxDescripcionEditar.Text.Trim(),
+                PrecioCompra = preciocompra,
+                PrecioVenta = precioventa,
+                Cantidad = Convert.ToInt32(textBoxCantidadEditar.Value),
+                Activo = ((OpcionCombo)comboBoxHabilitado.SelectedItem!).Valor            
+            };
+
+            var respuesta = await _productoService.Editar(objeto);
 
             if (respuesta != "")
             {

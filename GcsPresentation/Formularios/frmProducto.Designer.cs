@@ -106,6 +106,7 @@
             btnGuardarEditar.TabIndex = 11;
             btnGuardarEditar.Text = "Guardar";
             btnGuardarEditar.UseVisualStyleBackColor = false;
+            btnGuardarEditar.Click += btnGuardarEditar_Click;
             // 
             // btnVolverEditar
             // 
@@ -118,6 +119,7 @@
             btnVolverEditar.TabIndex = 10;
             btnVolverEditar.Text = "Volver";
             btnVolverEditar.UseVisualStyleBackColor = false;
+            btnVolverEditar.Click += btnVolverEditar_Click;
             // 
             // btnGuardarNuevo
             // 
@@ -411,6 +413,7 @@
             dataGridViewProductos.Name = "dataGridViewProductos";
             dataGridViewProductos.Size = new Size(685, 253);
             dataGridViewProductos.TabIndex = 3;
+            dataGridViewProductos.CellContentClick += dataGridViewProductos_CellContentClick;
             // 
             // btnBuscar
             // 
