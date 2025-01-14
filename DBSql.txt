@@ -288,3 +288,47 @@ begin
  Activo = @Activo  
  where IdProducto = @IdProducto
 end
+
+GO
+
+insert into Negocio 
+(RazonSocial, RUC, Direccion, Celular, Correo, SimboloMoneda, NombreLogo, UrlLogo)
+values
+('Gcs','3167508','Diagonal 18 # 5 - 44', '3150014586', 'oscaracastillop@gmail.com','$', '','')
+
+GO
+
+create procedure sp_obtenerNegocio
+as
+begin
+	select RazonSocial, RUC, Direccion, Celular, Correo, SimboloMoneda, NombreLogo, UrlLogo
+	from Negocio where IdNegocio = 1
+end
+
+GO
+
+create procedure sp_editarNegocio (
+@RazonSocial varchar(100), 
+@RUC varchar(20), 
+@Direccion varchar(100), 
+@Celular varchar(10), 
+@Correo varchar(50), 
+@SimboloMoneda varchar(5), 
+@NombreLogo varchar(100), 
+@UrlLogo varchar(255)
+)
+as
+begin
+	update	Negocio set
+			RazonSocial = @RazonSocial, 
+			RUC = @RUC, 
+			Direccion = @Direccion, 
+			Celular = @Celular, 
+			Correo = @Correo, 
+			SimboloMoneda = @SimboloMoneda, 
+			NombreLogo = @NombreLogo, 
+			UrlLogo = @UrlLogo
+	where	IdNegocio = 1
+end
+
+GO
