@@ -332,3 +332,105 @@ begin
 end
 
 GO
+
+insert into Rol (Nombre) values ('Administrador'), ('Ventas')
+
+GO
+
+insert into Usuario 
+(IdRol, NombreCompleto, Correo, NombreUsuario, Clave, ResetearClave) 
+values
+(1,'Oscar Castillo','oscaracastillop@gmail.com','oscar.castillo','35bfd10f68e4e65c331687452ece584e808bc433b8d049641317f62eb8ca541c',0)
+
+GO
+
+create procedure sp_listaRol
+as
+begin
+	select IdRol, Nombre from Rol
+end
+
+GO
+
+create procedure sp_listaUsuario(@Buscar varchar(50) = '')
+as
+begin
+	select 
+	u.IdUsuario,
+	r.IdRol,
+	r.Nombre[NombreRol],
+	u.NombreCompleto,
+	u.Correo,
+	u.NombreUsuario,
+	u.Activo
+	from Usuario u
+	inner join Rol r on r.IdRol = u.IdRol
+	where CONCAT(r.Nombre,u.NombreCompleto,u.Correo,u.NombreUsuario, iif(u.Activo = 1, 'Si', 'No'))
+	like '%' + @Buscar + '%'
+end
+
+GO
+
+create procedure [dbo].[sp_crearUsuario](  
+@IdRol int,
+@NombreCompleto varchar(255),
+@Correo varchar(255),
+@NombreUsuario varchar(255),
+@clave varchar(100),
+@MsjError varchar(100) output  
+)  
+as  
+begin  
+ set @MsjError = ''  
+  
+ if(exists(select * from Usuario where Correo = @Correo))  
+ begin  
+  set @MsjError = 'El Correo ya existe'  
+  return  
+ end  
+
+ if(exists(select * from Usuario where NombreUsuario = @NombreUsuario))  
+ begin  
+  set @MsjError = 'El Usuario ya existe'  
+  return  
+ end  
+   
+ insert into Usuario(IdRol, NombreCompleto, Correo, NombreUsuario, Clave) values (@IdRol, @NombreCompleto, @Correo, @NombreUsuario, @clave)  
+end
+
+GO
+
+create procedure [dbo].[sp_editarUsuario](  
+@IdUsuario int,
+@IdRol int,
+@NombreCompleto varchar(255),
+@Correo varchar(255),
+@NombreUsuario varchar(255),
+@Activo int,
+@MsjError varchar(100) output  
+)  
+as  
+begin  
+ set @MsjError = ''  
+  
+ if(exists(select * from Usuario where Correo = @Correo and IdUsuario != @IdUsuario))  
+ begin  
+  set @MsjError = 'El Correo ya existe'  
+  return  
+ end  
+
+ if(exists(select * from Usuario where NombreUsuario = @NombreUsuario and IdUsuario != @IdUsuario))  
+ begin  
+  set @MsjError = 'El Usuario ya existe'  
+  return  
+ end  
+   
+	update Usuario set
+	IdRol = @IdRol, 
+	NombreCompleto = @NombreCompleto, 
+	Correo = @Correo, 
+	NombreUsuario = @NombreUsuario, 
+	Activo = @Activo
+	where IdUsuario = @IdUsuario
+
+end

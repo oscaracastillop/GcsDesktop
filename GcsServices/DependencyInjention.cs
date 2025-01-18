@@ -13,6 +13,9 @@ namespace GcsServices
             services.AddTransient<IProductoService, ProductoService>();
             services.AddTransient<INegocioService, NegocioService>();
             services.AddTransient<ICloudinaryService, CloudinaryService>();
+            services.AddTransient<IRolService, RolService>();
+            services.AddTransient<IUsuarioService, UsuarioService>();
+            services.AddTransient<ICorreoService, CorreoService>();
 
         }
     }

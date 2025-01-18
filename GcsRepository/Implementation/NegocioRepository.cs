@@ -60,7 +60,7 @@ namespace GcsRepository.Implementation
                 cmd.Parameters.AddWithValue("@SimboloMoneda", objeto.SimboloMoneda);
                 cmd.Parameters.AddWithValue("@NombreLogo", objeto.NombreLogo);
                 cmd.Parameters.AddWithValue("@UrlLogo", objeto.UrlLogo);
-                cmd.Parameters.Add("@MsjError", SqlDbType.VarChar, 100).Direction = ParameterDirection.Output;
+                //cmd.Parameters.Add("@MsjError", SqlDbType.VarChar, 100).Direction = ParameterDirection.Output;
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 try
